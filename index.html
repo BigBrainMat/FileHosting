@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image/Video Upload with Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .preview {
+            margin-top: 20px;
+        }
+        img, video {
+            max-width: 500px;
+            max-height: 300px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload an Image/Video</h1>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        <label for="file">Select Image/Video:</label>
+        <input type="file" name="file" id="file" accept="image/*,video/*" required>
+        <div class="preview" id="preview"></div>
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        const previewDiv = document.getElementById('preview');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            previewDiv.innerHTML = ''; // Clear previous preview
+
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = fileURL;
+                    previewDiv.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = fileURL;
+                    video.controls = true;
+                    previewDiv.appendChild(video);
+                } else {
+                    previewDiv.innerHTML = '<p>Unsupported file type!</p>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

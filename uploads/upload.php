@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileType = strpos($mimeType, 'image') !== false ? 'image' : 'video';
         
         // Generate a unique file URL
-        $fileURL = "https://bigbrainmat.github.io/FileHosting/uploads/uploads/" . $randomName; // Replace 'localhost' with your domain
+        $fileURL = "https://bigbrainmat.github.io/FileHosting/uploads/uploads/a" . $randomName; // Replace 'localhost' with your domain
 
         // Insert metadata into the database
         $sql = "INSERT INTO media (file_name, file_url, file_type, file_size, mime_type) 

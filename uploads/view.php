@@ -63,7 +63,7 @@ $conn->close();
     <div class="sidebar">
         <h2>Navigation</h2>
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="upload.html">Home</a></li>
             <li><a href="pastUploads.php">Past Uploads</a></li>
         </ul>
     </div>

@@ -16,7 +16,7 @@ $fileId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($fileId > 0) {
     // Fetch file details from the database
-    $sql = "SELECT file_name, file_url, file_type, mime_type FROM media WHERE id = ?";
+    $sql = "SELECT file_name, file_url, file_type, mime_type, file_size FROM media WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $fileId);
     $stmt->execute();
@@ -28,6 +28,7 @@ if ($fileId > 0) {
         $fileURL = $file['file_url'];
         $fileType = $file['file_type'];
         $mimeType = $file['mime_type'];
+        $fileSize = $file['file_size'];
     } else {
         echo "File not found.";
         exit;
@@ -44,71 +45,56 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View <?php echo htmlspecialchars($fileName); ?></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        img, video {
-            max-width: 90%;
-            max-height: 500px;
-        }
-        .copy-box {
-            margin-top: 20px;
-        }
-        input.copy-link {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-        }
-        button.copy-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button.copy-button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-    <h1>Viewing: <?php echo htmlspecialchars($fileName); ?></h1>
-    <?php if ($fileType === 'image'): ?>
-        <img src="<?php echo htmlspecialchars($fileURL); ?>" alt="<?php echo htmlspecialchars($fileName); ?>">
-    <?php elseif ($fileType === 'video'): ?>
-        <video src="<?php echo htmlspecialchars($fileURL); ?>" controls></video>
-    <?php else: ?>
-        <p>Unsupported file type.</p>
-    <?php endif; ?>
-
-    <div class="copy-box">
-        <h3>Embed Link</h3>
-        <input type="text" class="copy-link" value="<?php echo htmlspecialchars($fileURL); ?>" id="fileLink" readonly>
-        <button class="copy-button" onclick="copyToClipboard()">Copy Link</button>
-    </div>
-
-    <p><a href="index.html">Upload another file</a></p>
-
+    <link rel="stylesheet" href="style.css">
     <script>
-        function copyToClipboard() {
-            const copyText = document.getElementById("fileLink");
+        // Function to copy the URL to clipboard
+        function copyToClipboard(id) {
+            var copyText = document.getElementById(id);
             copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
             document.execCommand("copy");
-            alert("Link copied: " + copyText.value);
         }
     </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="pastUploads.php">Past Uploads</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Viewing: <?php echo htmlspecialchars($fileName); ?></h1>
+
+        <!-- Display the file -->
+        <?php if ($fileType === 'image'): ?>
+            <img src="<?php echo htmlspecialchars($fileURL); ?>" alt="<?php echo htmlspecialchars($fileName); ?>">
+        <?php elseif ($fileType === 'video'): ?>
+            <video src="<?php echo htmlspecialchars($fileURL); ?>" controls></video>
+        <?php else: ?>
+            <p>Unsupported file type.</p>
+        <?php endif; ?>
+
+        <h3>File Metadata:</h3>
+        <ul>
+            <li><strong>File Name:</strong> <?php echo htmlspecialchars($fileName); ?></li>
+            <li><strong>File Type:</strong> <?php echo htmlspecialchars($fileType); ?></li>
+            <li><strong>Mime Type:</strong> <?php echo htmlspecialchars($mimeType); ?></li>
+            <li><strong>File Size:</strong> <?php echo number_format($fileSize / 1024, 2); ?> KB</li>
+        </ul>
+
+        <!-- Copyable Image Link with Copy Button -->
+        <h3>Copyable Image Link:</h3>
+        <input type="text" id="fileURL" value="<?php echo htmlspecialchars($fileURL); ?>" readonly>
+        <button onclick="copyToClipboard('fileURL')">Copy Link</button>
+
+        <p><a href="index.html">Upload another file</a></p>
+    </div>
 </body>
 </html>

@@ -102,3 +102,71 @@ footer {
     font-size: 14px;
     color: #aaa;
 }
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+    border-radius: 4px;
+}
+
+/* Content Styles */
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.gallery-item {
+    width: 200px;
+    text-align: center;
+}
+
+img, video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

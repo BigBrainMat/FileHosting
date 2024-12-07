@@ -30,7 +30,7 @@ $result = $conn->query($sql);
         <h2>Navigation</h2>
         <ul>
             <li><a href="upload.html">Home</a></li>
-            <li><a href="pastUploads.php">Past Uploads</a></li>
+            <li><a href="index.php">Past Uploads</a></li>
         </ul>
     </div>
 

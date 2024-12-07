@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View <?php echo htmlspecialchars($fileName); ?></title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Function to copy the URL to clipboard
+        function copyToClipboard(id) {
+            var copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand("copy");
+        }
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="upload.html">Home</a></li>
+            <li><a href="index.php">Past Uploads</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Viewing: <?php echo htmlspecialchars($fileName); ?></h1>
+
+        <!-- Display the file -->
+        <?php if ($fileType === 'image'): ?>
+            <img src="<?php echo htmlspecialchars($fileURL); ?>" alt="<?php echo htmlspecialchars($fileName); ?>">
+        <?php elseif ($fileType === 'video'): ?>
+            <video src="<?php echo htmlspecialchars($fileURL); ?>" controls></video>
+        <?php else: ?>
+            <p>Unsupported file type.</p>
+        <?php endif; ?>
+
+        <h3>File Metadata:</h3>
+        <ul>
+            <li><strong>File Name:</strong> <?php echo htmlspecialchars($fileName); ?></li>
+            <li><strong>File Type:</strong> <?php echo htmlspecialchars($fileType); ?></li>
+            <li><strong>Mime Type:</strong> <?php echo htmlspecialchars($mimeType); ?></li>
+            <li><strong>File Size:</strong> <?php echo number_format($fileSize / 1024, 2); ?> KB</li>
+        </ul>
+
+        <!-- Copyable Image Link with Copy Button -->
+        <h3>Copyable Image Link:</h3>
+        <input type="text" id="fileURL" value="<?php echo htmlspecialchars($fileURL); ?>" readonly>
+        <button onclick="copyToClipboard('fileURL')">Copy Link</button>
+
+        <p><a href="index.html">Upload another file</a></p>
+    </div>
+</body>
+</html>

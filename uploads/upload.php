@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileType = strpos($mimeType, 'image') !== false ? 'image' : 'video';
         
         // Generate a unique file URL
-        $fileURL = "http://localhost/fileHosting/uploads/uploads/" . $randomName; // Replace 'localhost' with your domain
+        $fileURL = "https://bigbrainmat.github.io/FileHosting/uploads/uploads/" . $randomName; // Replace 'localhost' with your domain
 
         // Insert metadata into the database
         $sql = "INSERT INTO media (file_name, file_url, file_type, file_size, mime_type) 
@@ -60,15 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "File upload failed.";
     }
 
-    if ($stmt->execute()) {
-        // Run Git Commands to commit and push to GitHub
-        $gitCommand = "cd /path/to/your/git/repo && git add uploads/ && git commit -m 'Add new image: $fileName' && git push origin main";
-        $output = shell_exec($gitCommand);
-    } else {
-        echo "Error saving to database: " . $conn->error;
-    }
-
 }
 
 $conn->close();
 ?>
+

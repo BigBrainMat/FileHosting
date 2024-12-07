@@ -11,11 +11,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Function to generate a random string
+function generateRandomString($length = 10) {
+    return bin2hex(random_bytes($length / 2)); // Generate a secure random string
+}
+
 // Handle the file upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $targetDir = "uploads/";
     $fileName = basename($_FILES["file"]["name"]);
-    $targetFilePath = $targetDir . $fileName;
+    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION); // Extract file extension
+    $randomName = generateRandomString(15) . "." . $fileExtension; // Randomize the filename
+    $targetFilePath = $targetDir . $randomName;
 
     // Ensure the uploads directory exists
     if (!is_dir($targetDir)) {
@@ -28,28 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileSize = $_FILES["file"]["size"];
         $mimeType = mime_content_type($targetFilePath);
         $fileType = strpos($mimeType, 'image') !== false ? 'image' : 'video';
-        $fileURL = "http://localhost/fileUpload/uploads/" . $fileName; // Replace with actual URL
+        
+        // Generate a unique file URL
+        $fileURL = "http://localhost/fileHosting/uploads/uploads/" . $randomName; // Replace 'localhost' with your domain
 
         // Insert metadata into the database
         $sql = "INSERT INTO media (file_name, file_url, file_type, file_size, mime_type) 
                 VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssds", $fileName, $fileURL, $fileType, $fileSize, $mimeType);
+        $stmt->bind_param("sssds", $randomName, $fileURL, $fileType, $fileSize, $mimeType);
 
         if ($stmt->execute()) {
-            // Run Git Commands to commit and push to GitHub
-            $gitCommand = "cd D:\xampp\htdocs\fileHosting && git add uploads/ && git commit -m 'Add new image: $fileName' && git push origin main";
-            $output = shell_exec($gitCommand);
-
-            if ($output) {
-                echo "File uploaded and committed to GitHub successfully!<br>";
-            } else {
-                echo "Error committing to GitHub.<br>";
-            }
-
-            echo "View it here: <br>";
-            echo "<a href='view.php?id=" . $conn->insert_id . "' target='_blank'>View File</a>";
+            $insertedId = $conn->insert_id;
+            // Redirect to the view page
+            header("Location: view.php?id=" . $insertedId);
+            exit();
         } else {
             echo "Error saving to database: " . $conn->error;
         }
@@ -58,11 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "File upload failed.";
     }
+
+    if ($stmt->execute()) {
+        // Run Git Commands to commit and push to GitHub
+        $gitCommand = "cd /path/to/your/git/repo && git add uploads/ && git commit -m 'Add new image: $fileName' && git push origin main";
+        $output = shell_exec($gitCommand);
+    } else {
+        echo "Error saving to database: " . $conn->error;
+    }
+
 }
-
-$conn->close();
-?>
-
 
 $conn->close();
 ?>
